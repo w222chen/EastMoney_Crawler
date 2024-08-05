@@ -9,8 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 from mongodb import MongoAPI
-from parser import PostParser
-from parser import CommentParser
+from guba_parser import PostParser
+from guba_parser import CommentParser
 
 
 class PostCrawler(object):
