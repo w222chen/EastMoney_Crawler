@@ -56,8 +56,8 @@ class PostCrawler(object):
             try:
                 self.browser.get(url)  # many times our crawler is restricted access (especially after 664 pages)
                 dic_list = []
-                list_item = self.browser.find_elements(By.CSS_SELECTOR, '.listitem')  # includes all posts on one page
-                for li in list_item:  # get each post respectively
+                list_items = self.browser.find_elements(By.CSS_SELECTOR, '.listitem')  # includes all posts on one page
+                for li in list_items:  # get each post respectively
                     dic = parser.parse_post_info(li)
                     if 'guba.eastmoney.com' in dic['post_url']:  # other website is different!
                         dic_list.append(dic)
