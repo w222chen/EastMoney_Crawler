@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
+from datetime import datetime
+
 from mongodb import MongoAPI
 from guba_parser import PostParser
 from guba_parser import CommentParser
@@ -47,7 +49,9 @@ class PostCrawler(object):
         stop_page = min(page2, max_page)  # avoid out of the index
 
         parser = PostParser()  # must be created out of the 'while', as it contains the function about date
-        postdb = MongoAPI('post_info', f'post_{self.symbol}')  # connect the collection
+        date_str = datetime.today().strftime('%Y%m%d')
+        postdb = MongoAPI('post_info', 
+                          f'post_{self.symbol}_{date_str}_{page1}_{stop_page}')  # connect the collection
 
         while current_page <= stop_page:  # use 'while' instead of 'for' is crucial for exception handling
             time.sleep(abs(random.normalvariate(0, 0.01)))  # random sleep time
@@ -61,7 +65,13 @@ class PostCrawler(object):
                     dic = parser.parse_post_info(li)
                     if 'guba.eastmoney.com' in dic['post_url']:  # other website is different!
                         dic_list.append(dic)
-                postdb.insert_many(dic_list)
+                    else:
+                        print(dic['post_url'])
+                # breakpoint()
+                if dic_list:
+                    postdb.insert_many(dic_list)
+                else:
+                    print(f"page {current_page} has nothing under guba.eastmoney.com")
                 print(f'{self.symbol}: 已经成功爬取第 {current_page} 页帖子基本信息，'
                       f'进度 {(current_page - page1 + 1)*100/(stop_page - page1 + 1):.2f}%')
                 current_page += 1
