@@ -67,7 +67,6 @@ class PostCrawler(object):
                         dic_list.append(dic)
                     else:
                         print(dic['post_url'])
-                # breakpoint()
                 if dic_list:
                     postdb.insert_many(dic_list)
                 else:
