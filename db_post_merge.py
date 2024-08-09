@@ -48,7 +48,7 @@ class CollectionMerger:
     def _flush_queue_to_dest(self):
         if len(self._posts_to_write) == 0:
             print("Buffer is empty, nothing to write")
-            return False
+            return
         self._dest_collection.insert_many(self._posts_to_write)
         self._clear_buffers()
 
